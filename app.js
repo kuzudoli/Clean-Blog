@@ -6,7 +6,12 @@ const pageController = require("./controllers/pageController");
 const app = express();
 
 //Connect DB
-mongoose.connect("mongodb://localhost/clean-blog-db");
+mongoose.connect("mongodb+srv://kuzudoli:lBwX5mqCFWhL2KwI@cluster0.yeqq3.mongodb.net/clean-blog-db?retryWrites=true&w=majority")
+.then(()=>{
+    console.log("DB Connected!");
+}).catch((err) => {
+    console.log(err);
+});
 
 //Template Engine
 app.set("view engine","ejs");
