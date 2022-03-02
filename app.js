@@ -38,7 +38,7 @@ app.put("/posts/:id",postController.updatePost);
 app.delete("/posts/:id",postController.deletePost);
 
 //Server
-const port = 3278;
+const port = process.env.PORT || 5000;
 app.listen(port,()=>{
     console.log(`${port} Listening...`);
 })
