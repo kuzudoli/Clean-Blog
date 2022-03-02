@@ -1,8 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const methodOverride = require("method-override");
-const Post = require("./models/Posts")
-
+const postController = require("./controllers/postController");
+const pageController = require("./controllers/pageController");
 const app = express();
 
 //Connect DB
@@ -20,59 +20,17 @@ app.use(methodOverride('_method',{
 }));
 
 //GET
-app.get('/', async(req,res)=>{
-    const posts = await Post.find({});//Get data for render
-    res.render("index",{
-        posts
-    });
-});
+app.get('/', pageController.getIndex);
+app.get('/about',pageController.getAbout);
 
-app.get('/about',(req,res)=>{
-    res.render("about");
-});
-
-app.get('/add_post',(req,res)=>{
-    res.render("add_post");
-});
-
-app.get('/posts/:id', async(req,res)=>{
-    const post = await Post.findById(req.params.id);//Get data for render
-    //console.log(typeof(post.dateCreated));
-    res.render("post",{
-        post
-    });
-});
-
-app.get('/posts/edit/:id', async(req,res)=>{
-    const post = await Post.findById(req.params.id);//Get data for render
-    //console.log(typeof(post.dateCreated));
-    res.render("edit_post",{
-        post
-    });
-});
+app.get('/add_post',postController.getCreatePage);
+app.get('/posts/:id',postController.getPostPage);
+app.get('/posts/edit/:id',postController.getEditPage);
 
 //POST
-//Create
-app.post("/posts",async(req,res)=>{
-    await Post.create(req.body)
-    res.redirect("/");
-});
-
-//Update
-app.put("/posts/:id",async(req,res)=>{
-    const post = await Post.findById(req.params.id);
-    post.title = req.body.title;
-    post.detail = req.body.detail;
-
-    post.save();
-
-    res.redirect(`/posts/${req.params.id}`);
-});
-
-app.delete("/posts/:id",async(req,res)=>{
-    await Post.findByIdAndRemove(req.params.id);
-    res.redirect("/");
-});
+app.post("/posts",postController.createPost);
+app.put("/posts/:id",postController.updatePost);
+app.delete("/posts/:id",postController.deletePost);
 
 //Server
 const port = 3278;
